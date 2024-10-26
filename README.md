@@ -35,23 +35,64 @@ brew install sfml
 pacman -S mingw-w64-x86_64-sfml
 ```
 
-## Building the Game
+## Build System
 
-1. Clone the repository:
-```bash
-git clone [your-repository-url]
-cd [repository-name]
+The project uses a Makefile build system with the following structure:
+
+### Directory Structure
+```
+.
+├── main.cpp          # Main game source code
+├── Makefile         # Build configuration
+├── README.md        # This file
+├── arial.ttf        # Font file (required)
+├── build/          # Compiled object files (created during build)
+└── bin/            # Executable output directory (created during build)
 ```
 
-2. Build the game using make:
+### Makefile Configuration
+
+Before building, you need to configure the SFML paths in the Makefile:
+
+1. Open the Makefile in a text editor
+2. Locate these lines at the top:
+```makefile
+SFML_INCLUDE = -I/path/to/sfml/include
+SFML_LIB_PATH = -L/path/to/sfml/lib
+```
+3. Replace them with your actual SFML paths:
+   - On Linux (if installed via package manager): Usually no change needed
+   - On macOS (Homebrew): Usually `/usr/local/include` and `/usr/local/lib`
+   - On Windows: Depends on your MSYS2 installation
+
+### Build Commands
+
+The Makefile provides several useful commands:
+
 ```bash
+# Build the game
 make
+
+# Build and run the game
+make run
+
+# Clean build files
+make clean
+
+# Install the game system-wide
+make install
+
+# Uninstall the game
+make uninstall
 ```
 
-3. Run the game:
-```bash
-make run
-```
+### Compiler Flags
+
+The build system uses the following compiler flags:
+- `-Wall -Wextra`: Enable comprehensive warnings
+- `-std=c++11`: Use C++11 standard
+- `-O2`: Enable optimization
+- `-MMD -MP`: Generate dependency files
 
 ## How to Play
 
@@ -67,31 +108,33 @@ make run
 - R: Restart (after game over)
 - Close window to exit game
 
-## Project Structure
-
-```
-.
-├── main.cpp          # Main game source code
-├── Makefile         # Build configuration
-├── README.md        # This file
-└── arial.ttf        # Font file (required)
-```
-
 ## Game Classes
 
-- `GameObject`: Base class for game entities
-- `Dinosaur`: Player character with jumping mechanics
-- `Cactus`: Obstacle class with movement logic
-- `Game`: Main game loop and state management
+### GameObject
+Base class for game entities with common functionality:
+- Position and collision detection
+- Virtual update method
+- Drawing capabilities
 
-## Technical Details
+### Dinosaur
+Player character class featuring:
+- Jump mechanics with gravity
+- Ground collision detection
+- State management (jumping/grounded)
 
-- Written in C++11
-- Uses SFML for graphics and window management
-- Implements basic collision detection
-- Features dynamic difficulty scaling
-- Uses smart pointers for memory management
-- Includes error handling for resource loading
+### Cactus
+Obstacle class implementing:
+- Automatic movement
+- Screen boundary checking
+- Collision detection with player
+
+### Game
+Main game class managing:
+- Game loop and state
+- Object creation and cleanup
+- Score tracking
+- User input
+- Rendering
 
 ## Customization
 
@@ -102,38 +145,4 @@ You can modify various game parameters by changing the constants in the source c
 - Window dimensions
 - Colors and sizes of objects
 
-## Troubleshooting
 
-### Common Issues
-
-1. **SFML library not found**
-   - Make sure SFML is properly installed
-   - Check if library paths are correct in Makefile
-
-2. **Font loading error**
-   - Ensure 'arial.ttf' is in the same directory as the executable
-   - Try using a different font and update the font path in the code
-
-3. **Compilation errors**
-   - Verify your C++ compiler supports C++11
-   - Check if all required SFML components are installed
-
-## Contributing
-
-Feel free to fork the project and submit pull requests with improvements such as:
-- New features
-- Bug fixes
-- Performance optimizations
-- Better graphics
-- Sound effects
-- Additional game mechanics
-
-## License
-
-[Add your chosen license here]
-
-## Credits
-
-Built using:
-- SFML (Simple and Fast Multimedia Library)
-- Inspired by Chrome's dinosaur game
